@@ -13,6 +13,7 @@ import com.rrp.pizzadough.calculator.RecipeValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class DoughUiState(
@@ -28,9 +29,7 @@ class DoughViewModel(private val store: RecipeStore) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            store.recipes.collect { recipe ->
-                _uiState.value = recipe.toState()
-            }
+            _uiState.value = store.recipes.first().toState()
         }
     }
 
