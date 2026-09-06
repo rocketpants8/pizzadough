@@ -26,21 +26,31 @@ data class DoughUiState(
 class DoughViewModel(private val store: RecipeStore) : ViewModel() {
     private val _uiState = MutableStateFlow(Defaults.recipe.toState())
     val uiState: StateFlow<DoughUiState> = _uiState.asStateFlow()
+    private val loadGate = Any()
+    private var locallyModified = false
 
     init {
         viewModelScope.launch {
-            _uiState.value = store.recipes.first().toState()
+            val stored = store.recipes.first()
+            synchronized(loadGate) {
+                if (!locallyModified) {
+                    _uiState.value = stored.toState()
+                }
+            }
         }
     }
 
     fun update(transform: (Recipe) -> Recipe) {
-        val next = transform(_uiState.value.recipe)
-        val errors = RecipeValidator.validate(next)
-        if (errors.isEmpty()) {
-            _uiState.value = next.toState()
-            viewModelScope.launch { store.save(next) }
-        } else {
-            _uiState.value = _uiState.value.copy(recipe = next, errors = errors)
+        synchronized(loadGate) {
+            locallyModified = true
+            val next = transform(_uiState.value.recipe)
+            val errors = RecipeValidator.validate(next)
+            if (errors.isEmpty()) {
+                _uiState.value = next.toState()
+                viewModelScope.launch { store.save(next) }
+            } else {
+                _uiState.value = _uiState.value.copy(recipe = next, errors = errors)
+            }
         }
     }
 
