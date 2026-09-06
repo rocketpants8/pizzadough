@@ -127,25 +127,19 @@ Remaining flour and water are never negative. Preferment flour percent is clampe
 
 ### Yeast model
 
-Auto yeast follows the same *idea* as PizzaBlab (time + temperature → baker’s %), using a documented TXCraig1-style inverse-time / Q10 curve. It is **not** a copy of PizzaBlab’s tables or JavaScript.
+Auto yeast uses PizzaBlab’s TXCraig1 lookup tables (room-temp 14–30°C and cold 4–9°C), interpolated between their dropdown points. Exact table values include 20 h at 24°C → **0.016% IDY** and 4 h at 24°C → **0.176% IDY**.
 
-Instant dry yeast baker’s percent of **the flour for that stage**:
-
-```
-idyPercent(tempC, hours) = 0.048 * (20.0 / hours) * 2.0^((20.0 - tempC) / 10.0)
-```
-
-- Anchor: 20 h at 20°C → 0.048% IDY (0.48 g per 1000 g flour), a published PizzApp+ / Khymos reference point in this model family.
 - Warmer or longer → less yeast. Cooler or shorter → more yeast.
 - `hours` is clamped to [1, 96], `tempC` to [1, 40] before evaluation.
+- Below 14°C the cold-ferment (Lehmann) table is used.
 
-Yeast type conversions from IDY:
+Yeast type conversions from IDY (PizzaBlab):
 
 | Type | Multiplier |
 | --- | --- |
 | Instant dry (IDY) | 1.0 |
-| Active dry (ADY) | 1.25 |
-| Fresh / cake | 3.0 |
+| Active dry (ADY) | 1.33 |
+| Fresh / cake | 3.125 |
 
 **Preferment yeast %** = `idyPercent(prefermentTempC, prefermentHours) * multiplier` (or override), applied to preferment flour.
 
@@ -158,7 +152,7 @@ Overrides replace the auto % for that stage only. Clearing the override returns 
 ### Display rounding
 
 - Flour, water, salt: nearest 1 g
-- Yeast: 2 decimal grams
+- Yeast: 3 decimal grams
 - Internals stay `Double`; rounding is display-only
 - Tests assert unrounded math (tolerance 0.05 g) plus rounding helpers
 

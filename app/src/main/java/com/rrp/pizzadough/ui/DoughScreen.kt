@@ -416,7 +416,7 @@ private fun textRepresentsOverride(text: String, value: Double?): Boolean =
 private fun formatLineGrams(line: IngredientLine, dashYeast: Boolean): String {
     if (dashYeast && line.isYeast) return "—"
     return if (line.isYeast) {
-        String.format(Locale.US, "%.2f g", Grams.yeast(line.grams))
+        String.format(Locale.US, "%.3f g", Grams.yeast(line.grams))
     } else {
         String.format(Locale.US, "%.0f g", Grams.mass(line.grams))
     }

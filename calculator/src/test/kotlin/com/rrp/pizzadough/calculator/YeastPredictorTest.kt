@@ -6,8 +6,18 @@ import org.junit.Test
 
 class YeastPredictorTest {
     @Test
-    fun anchorTwentyHoursAtTwentyCIsPointZeroFourEight() {
-        assertEquals(0.048, YeastPredictor.idyPercent(20.0, 20.0), 1e-9)
+    fun pizzaBlabTwentyHoursAtTwentyFourCIsPointZeroOneSix() {
+        assertEquals(0.016, YeastPredictor.idyPercent(24.0, 20.0), 1e-9)
+    }
+
+    @Test
+    fun pizzaBlabFourHoursAtTwentyFourCIsPointOneSevenSix() {
+        assertEquals(0.176, YeastPredictor.idyPercent(24.0, 4.0), 1e-9)
+    }
+
+    @Test
+    fun pizzaBlabTwentyHoursAtTwentyCIsPointZeroThreeSeven() {
+        assertEquals(0.037, YeastPredictor.idyPercent(20.0, 20.0), 1e-9)
     }
 
     @Test
@@ -18,16 +28,16 @@ class YeastPredictorTest {
     }
 
     @Test
-    fun freshIsThreeTimesIdy() {
+    fun freshIsThreePointOneTwoFiveTimesIdy() {
         val idy = YeastPredictor.percent(YeastType.IDY, 24.0, 4.0)
         val fresh = YeastPredictor.percent(YeastType.FRESH, 24.0, 4.0)
-        assertEquals(idy * 3.0, fresh, 1e-9)
+        assertEquals(idy * 3.125, fresh, 1e-9)
     }
 
     @Test
-    fun adyIsOnePointTwoFiveTimesIdy() {
+    fun adyIsOnePointThreeThreeTimesIdy() {
         val idy = YeastPredictor.percent(YeastType.IDY, 24.0, 4.0)
         val ady = YeastPredictor.percent(YeastType.ADY, 24.0, 4.0)
-        assertEquals(idy * 1.25, ady, 1e-9)
+        assertEquals(idy * 1.33, ady, 1e-9)
     }
 }

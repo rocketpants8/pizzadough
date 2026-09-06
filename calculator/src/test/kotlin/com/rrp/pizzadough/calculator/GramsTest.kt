@@ -11,8 +11,8 @@ class GramsTest {
     }
 
     @Test
-    fun yeastRoundsToTwoDecimals() {
-        assertEquals(0.12, Grams.yeast(0.123), 1e-9)
-        assertEquals(0.13, Grams.yeast(0.126), 1e-9)
+    fun yeastRoundsToThreeDecimals() {
+        assertEquals(0.123, Grams.yeast(0.1234), 1e-9)
+        assertEquals(0.124, Grams.yeast(0.1236), 1e-9)
     }
 }

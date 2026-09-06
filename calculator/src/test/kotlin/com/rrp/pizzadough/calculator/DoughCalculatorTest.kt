@@ -77,4 +77,12 @@ class DoughCalculatorTest {
         assertTrue(result.preferment.isEmpty())
         assertEquals("Flour", result.finalDough[0].name)
     }
+
+    @Test
+    fun pizzaBlabSixBallsTwentyHourBigaAt24C() {
+        val result = DoughCalculator.calculate(Defaults.recipe.copy(saltPercent = 2.7))
+        val bigaYeast = result.preferment.first { it.isYeast }.grams
+        assertEquals(0.027, Grams.yeast(bigaYeast), 1e-9)
+        assertEquals(1.457, Grams.yeast(result.extraYeastGrams), 1e-9)
+    }
 }
