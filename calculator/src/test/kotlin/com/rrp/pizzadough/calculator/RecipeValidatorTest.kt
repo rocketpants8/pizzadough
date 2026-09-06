@@ -1,6 +1,5 @@
 package com.rrp.pizzadough.calculator
 
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -32,5 +31,17 @@ class RecipeValidatorTest {
     fun prefermentFlourOverOneHundredIsInvalid() {
         val errors = RecipeValidator.validate(Defaults.recipe.copy(prefermentFlourPercent = 101.0))
         assertTrue(errors.any { it.field == "prefermentFlourPercent" })
+    }
+
+    @Test
+    fun wetBigaExceedingDoughHydrationIsInvalid() {
+        val errors = RecipeValidator.validate(
+            Defaults.recipe.copy(
+                hydrationPercent = 70.0,
+                prefermentFlourPercent = 80.0,
+                prefermentHydrationPercent = 90.0,
+            ),
+        )
+        assertTrue(errors.any { it.field == "prefermentHydrationPercent" })
     }
 }

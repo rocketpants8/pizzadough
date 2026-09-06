@@ -262,7 +262,7 @@ fun DoughScreen(
                 title = "Final dough",
                 lines = state.result.finalDough,
                 quiet = false,
-                dashYeast = recipe.usePreferment && state.result.extraYeastGrams == 0.0,
+                dashYeast = recipe.usePreferment && Grams.yeast(state.result.extraYeastGrams) == 0.0,
             )
             IngredientSection(
                 title = "Totals",
@@ -359,20 +359,26 @@ private fun YeastPercentField(
     field: String,
     errors: List<FieldError>,
 ) {
-    val error = errors.message(field)
     var text by remember { mutableStateOf(value?.let { formatNumber(it) } ?: "") }
     LaunchedEffect(value) {
         if (!textRepresentsOverride(text, value)) {
             text = value?.let { formatNumber(it) } ?: ""
         }
     }
+    val parseError = if (text.isNotBlank() && text.toDoubleOrNull() == null) {
+        "Yeast % must be a number"
+    } else {
+        null
+    }
+    val error = parseError ?: errors.message(field)
     OutlinedTextField(
         value = text,
         onValueChange = { new ->
             text = new
-            onValueChange(
-                if (new.isBlank()) null else new.toDoubleOrNull() ?: 0.0,
-            )
+            when {
+                new.isBlank() -> onValueChange(null)
+                new.toDoubleOrNull() != null -> onValueChange(new.toDoubleOrNull())
+            }
         },
         modifier = Modifier.fillMaxWidth(),
         label = { Text(label) },

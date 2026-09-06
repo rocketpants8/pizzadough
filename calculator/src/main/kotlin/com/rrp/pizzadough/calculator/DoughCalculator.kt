@@ -42,8 +42,8 @@ object DoughCalculator {
         val prefYeast = if (recipe.usePreferment) prefFlour * prefYeastPct / 100.0 else 0.0
         val totalYeast = flour * yeastFraction
         val extraYeast = maxOf(0.0, totalYeast - prefYeast)
-        val remainingFlour = flour - prefFlour
-        val remainingWater = water - prefWater
+        val remainingFlour = maxOf(0.0, flour - prefFlour)
+        val remainingWater = maxOf(0.0, water - prefWater)
 
         val preferment = if (recipe.usePreferment) listOf(
             IngredientLine("Flour", prefFlour),
