@@ -7,6 +7,7 @@ data class Recipe(
     val saltPercent: Double,
     val yeastType: YeastType,
     val usePreferment: Boolean,
+    val prefermentType: PrefermentType,
     val prefermentFlourPercent: Double,
     val prefermentHydrationPercent: Double,
     val prefermentHours: Double,
@@ -16,4 +17,11 @@ data class Recipe(
     val yeastOverridePercent: Double?,
     val prefermentYeastOverridePercent: Double?,
     val recipeExpanded: Boolean,
-)
+) {
+    fun withPrefermentType(type: PrefermentType): Recipe =
+        if (type == prefermentType) {
+            this
+        } else {
+            copy(prefermentType = type, prefermentHydrationPercent = type.standardHydrationPercent)
+        }
+}

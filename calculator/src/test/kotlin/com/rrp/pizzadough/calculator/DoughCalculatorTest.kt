@@ -85,4 +85,30 @@ class DoughCalculatorTest {
         assertEquals(0.027, Grams.yeast(bigaYeast), 1e-9)
         assertEquals(1.457, Grams.yeast(result.extraYeastGrams), 1e-9)
     }
+
+    @Test
+    fun pizzaBlabSixBallsTwentyHourPoolishAt24C() {
+        val poolish = Defaults.recipe.withPrefermentType(PrefermentType.POOLISH)
+        val result = DoughCalculator.calculate(poolish)
+        val pref = result.preferment.associate { it.name to it.grams }
+        val final = result.finalDough.associate { it.name to it.grams }
+        assertEquals(169.0, Grams.mass(pref.getValue("Flour")), 0.0)
+        assertEquals(169.0, Grams.mass(pref.getValue("Water")), 0.0)
+        assertEquals(674.0, Grams.mass(final.getValue("Flour (remaining)")), 0.0)
+        // PizzaBlab subtracts rounded preferment water from rounded total water; we round once.
+        assertEquals(463.0, Grams.mass(final.getValue("Water (remaining)")), 1.0)
+        assertEquals(0.027, Grams.yeast(pref.getValue("Yeast")), 1e-9)
+    }
+
+    @Test
+    fun poolishOnlyChangesWaterSplitComparedWithBiga() {
+        val biga = DoughCalculator.calculate(Defaults.recipe)
+        val poolish = DoughCalculator.calculate(
+            Defaults.recipe.withPrefermentType(PrefermentType.POOLISH),
+        )
+        assertEquals(biga.totals, poolish.totals)
+        assertEquals(biga.preferment[0], poolish.preferment[0])
+        assertEquals(biga.preferment[2], poolish.preferment[2])
+        assertEquals(biga.extraYeastGrams, poolish.extraYeastGrams, 0.0)
+    }
 }

@@ -16,19 +16,23 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +44,7 @@ import com.rrp.pizzadough.DoughUiState
 import com.rrp.pizzadough.calculator.FieldError
 import com.rrp.pizzadough.calculator.Grams
 import com.rrp.pizzadough.calculator.IngredientLine
+import com.rrp.pizzadough.calculator.PrefermentType
 import com.rrp.pizzadough.calculator.Recipe
 import com.rrp.pizzadough.calculator.YeastType
 import java.util.Locale
@@ -54,6 +59,7 @@ fun DoughScreen(
     val recipe = state.recipe
     val errors = state.errors
     val ballCountError = errors.message("ballCount")
+    val prefName = recipe.prefermentType.label
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Dough") }) },
@@ -166,12 +172,25 @@ fun DoughScreen(
                             )
                         }
                         if (recipe.usePreferment) {
+                            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                                PrefermentType.entries.forEachIndexed { index, type ->
+                                    SegmentedButton(
+                                        selected = recipe.prefermentType == type,
+                                        onClick = { onUpdate { it.withPrefermentType(type) } },
+                                        shape = SegmentedButtonDefaults.itemShape(
+                                            index,
+                                            PrefermentType.entries.size,
+                                        ),
+                                        label = { Text(type.label) },
+                                    )
+                                }
+                            }
                             DecimalField(
                                 value = recipe.prefermentFlourPercent,
                                 onValueChange = { value ->
                                     onUpdate { it.copy(prefermentFlourPercent = value) }
                                 },
-                                label = "Biga flour (%)",
+                                label = "$prefName flour (%)",
                                 field = "prefermentFlourPercent",
                                 errors = errors,
                             )
@@ -180,7 +199,7 @@ fun DoughScreen(
                                 onValueChange = { value ->
                                     onUpdate { it.copy(prefermentHydrationPercent = value) }
                                 },
-                                label = "Biga hydration (%)",
+                                label = "$prefName hydration (%)",
                                 field = "prefermentHydrationPercent",
                                 errors = errors,
                             )
@@ -189,7 +208,7 @@ fun DoughScreen(
                                 onValueChange = { value ->
                                     onUpdate { it.copy(prefermentHours = value) }
                                 },
-                                label = "Biga hours",
+                                label = "$prefName hours",
                                 field = "prefermentHours",
                                 errors = errors,
                             )
@@ -198,7 +217,7 @@ fun DoughScreen(
                                 onValueChange = { value ->
                                     onUpdate { it.copy(prefermentTempC = value) }
                                 },
-                                label = "Biga (°C)",
+                                label = "$prefName (°C)",
                                 field = "prefermentTempC",
                                 errors = errors,
                             )
@@ -224,7 +243,7 @@ fun DoughScreen(
                                 onValueChange = { value ->
                                     onUpdate { it.copy(prefermentYeastOverridePercent = value) }
                                 },
-                                label = "Biga yeast (%)",
+                                label = "$prefName yeast (%)",
                                 field = "prefermentYeastOverridePercent",
                                 errors = errors,
                             )
@@ -251,21 +270,64 @@ fun DoughScreen(
             }
 
             if (recipe.usePreferment) {
+                PrefermentIngredientTabs(
+                    prefName = prefName,
+                    state = state,
+                )
+            } else {
                 IngredientSection(
-                    title = "Biga",
-                    lines = state.result.preferment,
+                    title = "Final dough",
+                    lines = state.result.finalDough,
                     quiet = false,
                     dashYeast = false,
                 )
+                IngredientSection(
+                    title = "Totals",
+                    lines = state.result.totals,
+                    quiet = true,
+                    dashYeast = false,
+                )
             }
-            IngredientSection(
-                title = "Final dough",
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PrefermentIngredientTabs(
+    prefName: String,
+    state: DoughUiState,
+) {
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+    val tabTitles = listOf(prefName, "Final dough", "Totals")
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        PrimaryTabRow(selectedTabIndex = selectedTab) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTab == index,
+                    onClick = { selectedTab = index },
+                    text = { Text(title) },
+                )
+            }
+        }
+        when (selectedTab) {
+            0 -> IngredientSection(
+                title = null,
+                lines = state.result.preferment,
+                quiet = false,
+                dashYeast = false,
+            )
+            1 -> IngredientSection(
+                title = null,
                 lines = state.result.finalDough,
                 quiet = false,
-                dashYeast = recipe.usePreferment && Grams.yeast(state.result.extraYeastGrams) == 0.0,
+                dashYeast = Grams.yeast(state.result.extraYeastGrams) == 0.0,
             )
-            IngredientSection(
-                title = "Totals",
+            else -> IngredientSection(
+                title = null,
                 lines = state.result.totals,
                 quiet = true,
                 dashYeast = false,
@@ -276,7 +338,7 @@ fun DoughScreen(
 
 @Composable
 private fun IngredientSection(
-    title: String,
+    title: String?,
     lines: List<IngredientLine>,
     quiet: Boolean,
     dashYeast: Boolean,
@@ -300,7 +362,9 @@ private fun IngredientSection(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(text = title, style = titleStyle, color = color)
+        if (title != null) {
+            Text(text = title, style = titleStyle, color = color)
+        }
         lines.forEach { line ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(

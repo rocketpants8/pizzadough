@@ -22,6 +22,14 @@ class RecipeSummaryTest {
     }
 
     @Test
+    fun poolishSummary() {
+        assertEquals(
+            "75% · 24°C · 20h poolish / 4h dough",
+            RecipeSummary.format(Defaults.recipe.withPrefermentType(PrefermentType.POOLISH)),
+        )
+    }
+
+    @Test
     fun noPreferment() {
         assertEquals(
             "75% · 24°C · 4h dough",

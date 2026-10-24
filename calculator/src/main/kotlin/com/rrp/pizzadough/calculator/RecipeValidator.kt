@@ -16,21 +16,22 @@ object RecipeValidator {
             add(FieldError("finalTempC", "Temperature must be between 1 and 40°C"))
         }
         if (recipe.usePreferment) {
+            val pref = recipe.prefermentType.label
             if (recipe.prefermentFlourPercent <= 0.0 || recipe.prefermentFlourPercent > 100.0) {
-                add(FieldError("prefermentFlourPercent", "Biga flour must be greater than 0% and at most 100% of total flour"))
+                add(FieldError("prefermentFlourPercent", "$pref flour must be greater than 0% and at most 100% of total flour"))
             }
-            gt0("prefermentHydrationPercent", recipe.prefermentHydrationPercent, "Biga hydration")
-            gt0("prefermentHours", recipe.prefermentHours, "Biga hours")
+            gt0("prefermentHydrationPercent", recipe.prefermentHydrationPercent, "$pref hydration")
+            gt0("prefermentHours", recipe.prefermentHours, "$pref hours")
             if (recipe.prefermentTempC !in 1.0..40.0) {
                 add(FieldError("prefermentTempC", "Temperature must be between 1 and 40°C"))
             }
-            val bigaWaterVsDough =
+            val prefWaterVsDough =
                 recipe.prefermentFlourPercent / 100.0 * recipe.prefermentHydrationPercent
-            if (bigaWaterVsDough > recipe.hydrationPercent) {
+            if (prefWaterVsDough > recipe.hydrationPercent) {
                 add(
                     FieldError(
                         "prefermentHydrationPercent",
-                        "Biga uses more water than the dough hydration allows",
+                        "$pref uses more water than the dough hydration allows",
                     ),
                 )
             }

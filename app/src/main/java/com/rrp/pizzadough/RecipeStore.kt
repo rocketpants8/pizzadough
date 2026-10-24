@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.rrp.pizzadough.calculator.Defaults
+import com.rrp.pizzadough.calculator.PrefermentType
 import com.rrp.pizzadough.calculator.Recipe
 import com.rrp.pizzadough.calculator.RecipeValidator
 import com.rrp.pizzadough.calculator.YeastType
@@ -30,6 +31,9 @@ class RecipeStore(context: Context) {
                 ?.let { stored -> YeastType.entries.find { it.name == stored } }
                 ?: defaults.yeastType,
             usePreferment = preferences[Keys.usePreferment] ?: defaults.usePreferment,
+            prefermentType = preferences[Keys.prefermentType]
+                ?.let { stored -> PrefermentType.entries.find { it.name == stored } }
+                ?: defaults.prefermentType,
             prefermentFlourPercent = preferences[Keys.prefermentFlourPercent]
                 ?: defaults.prefermentFlourPercent,
             prefermentHydrationPercent = preferences[Keys.prefermentHydrationPercent]
@@ -58,6 +62,7 @@ class RecipeStore(context: Context) {
             preferences[Keys.saltPercent] = recipe.saltPercent
             preferences[Keys.yeastType] = recipe.yeastType.name
             preferences[Keys.usePreferment] = recipe.usePreferment
+            preferences[Keys.prefermentType] = recipe.prefermentType.name
             preferences[Keys.prefermentFlourPercent] = recipe.prefermentFlourPercent
             preferences[Keys.prefermentHydrationPercent] = recipe.prefermentHydrationPercent
             preferences[Keys.prefermentHours] = recipe.prefermentHours
@@ -79,6 +84,7 @@ class RecipeStore(context: Context) {
         val saltPercent = doublePreferencesKey("saltPercent")
         val yeastType = stringPreferencesKey("yeastType")
         val usePreferment = booleanPreferencesKey("usePreferment")
+        val prefermentType = stringPreferencesKey("prefermentType")
         val prefermentFlourPercent = doublePreferencesKey("prefermentFlourPercent")
         val prefermentHydrationPercent = doublePreferencesKey("prefermentHydrationPercent")
         val prefermentHours = doublePreferencesKey("prefermentHours")

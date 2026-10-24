@@ -19,9 +19,10 @@ This is inspired by [PizzaBlab’s pizza dough calculator](https://www.pizzablab
 | Hydration | 75% |
 | Salt | 2.8% |
 | Yeast type | Instant dry yeast (IDY) |
-| Preferment | On (biga) |
+| Preferment | On |
+| Preferment type | Biga |
 | Flour in preferment | 20% of total flour |
-| Preferment hydration | 45% |
+| Preferment hydration | 45% (biga standard; poolish standard is 100%) |
 | Preferment time / temp | 20 h at 24°C |
 | Final dough time / temp | 4 h at 24°C |
 | Yeast % | Auto (from time/temp), overridable |
@@ -69,6 +70,7 @@ When expanded:
 - Hydration %, salt %
 - Yeast type (IDY / ADY / fresh) — IDY is the default; types are switchable
 - Preferment on/off
+- Preferment type: Biga / Poolish. Switching type sets preferment hydration to that type’s standard (45% / 100%); it stays editable. Labels and the results heading follow the chosen type.
 - % of total flour in preferment, preferment hydration %
 - Preferment hours and temperature °C
 - Final-dough hours and temperature °C
@@ -80,6 +82,8 @@ When expanded:
 1. **Biga** — flour, water, yeast (grams). Hidden when preferment is off.
 2. **Final dough** — remaining flour, remaining water, salt, remaining yeast (or an em dash if no extra yeast).
 3. **Totals** — smaller, at the bottom: total flour, water, yeast, total dough, single ball. Total dough must equal balls × ball weight (before display rounding).
+
+When preferment is on, these three sections are shown as tabs (preferment name / Final dough / Totals), one at a time, so the totals can't be mistaken for final-dough amounts. When preferment is off, Final dough and Totals are shown stacked as above.
 
 ## Calculator math
 
@@ -105,7 +109,9 @@ yeastFraction = max(
 flour = totalDoughGrams / (1 + hydration/100 + salt/100 + yeastFraction)
 ```
 
-### Preferment (biga)
+### Preferment (biga or poolish)
+
+PizzaBlab has no separate poolish formula: its server returns identical flour, yeast, and salt for a 45% and a 100% hydration preferment, with only the preferment/remaining water split changing. Biga and poolish therefore share the math below and differ only in preferment hydration.
 
 When preferment is on:
 

@@ -44,4 +44,19 @@ class RecipeValidatorTest {
         )
         assertTrue(errors.any { it.field == "prefermentHydrationPercent" })
     }
+
+    @Test
+    fun poolishDefaultsAreValid() {
+        val poolish = Defaults.recipe.withPrefermentType(PrefermentType.POOLISH)
+        assertTrue(RecipeValidator.validate(poolish).isEmpty())
+    }
+
+    @Test
+    fun poolishErrorsNamePoolish() {
+        val errors = RecipeValidator.validate(
+            Defaults.recipe.withPrefermentType(PrefermentType.POOLISH)
+                .copy(prefermentHours = 0.0),
+        )
+        assertTrue(errors.single { it.field == "prefermentHours" }.message.startsWith("Poolish"))
+    }
 }
