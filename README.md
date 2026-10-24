@@ -14,7 +14,7 @@ Inspired by [PizzaBlab's pizza dough calculator](https://www.pizzablab.com/calcu
 
 ## Install
 
-Download an APK from [Releases](../../releases) and sideload it (Android 8.0+). You may need to allow installs from unknown sources.
+Download an APK from [Releases](https://github.com/rocketpants8/pizzadough/releases) and sideload it (Android 8.0+). You may need to allow installs from unknown sources.
 
 - `*-minifiedDebug.apk`: smaller, shrunk build. Recommended for everyday use.
 - `*-debug.apk`: standard debug build.
