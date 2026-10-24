@@ -1,0 +1,50 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Crust -->
+    <path
+        android:fillColor="#FFC4852C"
+        android:pathData="M24,54a30,30 0 1,1 60,0a30,30 0 1,1 -60,0z" />
+    <path
+        android:fillColor="#FFEAB457"
+        android:pathData="M25.5,54a28.5,28.5 0 1,1 57,0a28.5,28.5 0 1,1 -57,0z" />
+    <!-- Leopard spots on the cornicione -->
+    <path
+        android:fillColor="#B35A2E12"
+        android:pathData="M77.8,63.2a1.6,1.6 0 1,1 3.2,0a1.6,1.6 0 1,1 -3.2,0z
+            M43.2,79.4a1.8,1.8 0 1,1 3.6,0a1.8,1.8 0 1,1 -3.6,0z
+            M27,44.8a1.5,1.5 0 1,1 3,0a1.5,1.5 0 1,1 -3,0z
+            M61.6,28.6a1.7,1.7 0 1,1 3.4,0a1.7,1.7 0 1,1 -3.4,0z
+            M43.4,28.6a1.3,1.3 0 1,1 2.6,0a1.3,1.3 0 1,1 -2.6,0z
+            M77.9,44.8a1.4,1.4 0 1,1 2.8,0a1.4,1.4 0 1,1 -2.8,0z
+            M29.2,65a1.2,1.2 0 1,1 2.4,0a1.2,1.2 0 1,1 -2.4,0z
+            M64.8,79a1.3,1.3 0 1,1 2.6,0a1.3,1.3 0 1,1 -2.6,0z" />
+    <!-- Tomato -->
+    <path
+        android:fillColor="#FFB3261E"
+        android:pathData="M31,54a23,23 0 1,1 46,0a23,23 0 1,1 -46,0z" />
+    <path
+        android:fillColor="#FFD2402B"
+        android:pathData="M32.5,54a21.5,21.5 0 1,1 43,0a21.5,21.5 0 1,1 -43,0z" />
+    <!-- Mozzarella -->
+    <path
+        android:fillColor="#FFFFF6DE"
+        android:pathData="M39,44a5,5 0 1,1 10,0a5,5 0 1,1 -10,0z
+            M58.5,45a4.5,4.5 0 1,1 9,0a4.5,4.5 0 1,1 -9,0z
+            M50.5,63a5.5,5.5 0 1,1 11,0a5.5,5.5 0 1,1 -11,0z
+            M37,61a4,4 0 1,1 8,0a4,4 0 1,1 -8,0z
+            M65,63.5a3.5,3.5 0 1,1 7,0a3.5,3.5 0 1,1 -7,0z" />
+    <!-- Basil -->
+    <path
+        android:fillColor="#FF2E7D32"
+        android:pathData="M46,53Q49.5,46 56,48.5Q52.5,55.5 46,53z
+            M58,56Q63,51.5 68.5,54.5Q63,60 58,56z
+            M49,37.5Q53,33.5 57.5,36Q53,40.5 49,37.5z" />
+    <path
+        android:strokeColor="#FF1B5E20"
+        android:strokeWidth="0.6"
+        android:strokeLineCap="round"
+        android:pathData="M46.5,52.8L55.5,48.7M58.5,55.8L68,54.6M49.5,37.4L57,36.1" />
+</vector>
