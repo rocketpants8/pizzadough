@@ -1,9 +1,11 @@
 .gradle/
+.kotlin/
 build/
 **/build/
 .idea/
+.vscode/
 *.iml
 local.properties
 .DS_Store
 captures/
-.superpowers/sdd/
+.superpowers/
